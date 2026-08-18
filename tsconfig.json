@@ -1,0 +1,32 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/host-apiproxy"
+    },
+    {
+      "path": "./packages/host-webserver"
+    },
+    {
+      "path": "./packages/client-connection"
+    },
+    {
+      "path": "./packages/client-runtime"
+    },
+    {
+      "path": "./packages/client-ui-slots"
+    },
+    {
+      "path": "./packages/client-ui-minimal-chat"
+    },
+    {
+      "path": "./packages/client-modules"
+    },
+    {
+      "path": "./packages/client-web"
+    },
+    {
+      "path": "./packages/host-frontend-static-minimal"
+    }
+  ]
+}

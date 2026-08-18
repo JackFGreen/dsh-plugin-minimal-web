@@ -1,0 +1,34 @@
+{
+  "name": "@minimal-web/client-ui-minimal-chat",
+  "private": true,
+  "type": "module",
+  "main": "lib/types/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/types/index.js"
+    }
+  },
+  "files": [
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "dependencies": {
+    "react": "^18.3.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@minimal-web/client-runtime": "workspace:*",
+    "@minimal-web/client-ui-slots": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "link:../../../deepseek-harness/vendor/cordis",
+    "@minimal-web/client-runtime": "workspace:*",
+    "@minimal-web/client-ui-slots": "workspace:*",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "react-dom": "^18.3.1"
+  }
+}

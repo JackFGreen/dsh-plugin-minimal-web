@@ -1,0 +1,42 @@
+{
+  "name": "@minimal-web/client-web",
+  "private": true,
+  "type": "module",
+  "main": "lib/types/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/types/index.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "scripts": {
+    "build:web": "vite build"
+  },
+  "dependencies": {
+    "@minimal-web/client-modules": "workspace:*",
+    "@minimal-web/client-ui-slots": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@minimal-web/client-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "link:../../../deepseek-harness/vendor/cordis",
+    "@minimal-web/client-connection": "workspace:*",
+    "@minimal-web/client-runtime": "workspace:*",
+    "@minimal-web/client-ui-minimal-chat": "workspace:*",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^6.0.0"
+  }
+}

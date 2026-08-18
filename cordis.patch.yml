@@ -1,0 +1,32 @@
+- id: llm-pi-ai
+  config:
+    providers:
+      mimo:
+        displayName: MiMo
+        apiKeyEnv: API_KEY
+        api: openai-completions
+        baseURL: https://token-plan-cn.xiaomimimo.com/v1
+        models:
+          - id: mimo-v2.5-pro
+
+- insert:
+    - id: minimal-api-proxy
+      name: "dsh-plugin-minimal-web/host-apiproxy"
+      config:
+        provider: mimo
+        model: mimo-v2.5-pro
+
+    - id: minimal-webserver
+      name: "dsh-plugin-minimal-web/host-webserver"
+      config:
+        host: "127.0.0.1"
+        port: 3080
+
+    - id: minimal-client-connection
+      name: "dsh-plugin-minimal-web/client-connection"
+
+    - id: minimal-client-modules
+      name: "dsh-plugin-minimal-web/client-modules"
+
+    - id: minimal-frontend-static
+      name: "dsh-plugin-minimal-web/host-frontend-static-minimal"

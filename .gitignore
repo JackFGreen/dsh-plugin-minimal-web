@@ -1,0 +1,24 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Generated build output
+lib/
+dist/
+*.tsbuildinfo
+
+# Test and tool caches
+coverage/
+.vite/
+.vitest/
+
+# Logs
+*.log
+pnpm-debug.log*
+
+# macOS metadata
+.DS_Store
