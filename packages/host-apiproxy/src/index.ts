@@ -7,9 +7,9 @@
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import type { AgentHandle } from '@deepseek-ai/dsh-agent'
+import type {} from '@deepseek-ai/dsh-agent-default-model'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { SessionId } from '@deepseek-ai/dsh-session'
-import z from '@deepseek-ai/schemastery'
 import { randomUUID } from 'node:crypto'
 import type {
   SessionCreateRequest,
@@ -24,14 +24,6 @@ declare module '@deepseek-ai/cordis' {
     /** Minimal transport-independent API for browser-created Agent sessions. */
     apiProxy: MinimalApiProxy
   }
-}
-
-/** Model route assigned to every Agent created by this service instance. */
-export interface Config {
-  /** Registered LLM provider route. */
-  provider: string
-  /** Provider-owned model id. */
-  model: string
 }
 
 /** Callback receiving one event frame synchronously after its session append. */
@@ -67,19 +59,14 @@ export interface MinimalApiProxy {
 
 /** Minimal Agent API implementation provided as `ctx.apiProxy`. */
 export class MinimalApiProxyService extends Service implements MinimalApiProxy {
-  static inject = ['agents', 'agentLoop']
-
-  static Config: z<Config> = z.object({
-    provider: z.string().required(),
-    model: z.string().required(),
-  })
+  static inject = ['agents', 'agentLoop', 'agentDefaultModel']
 
   private readonly handles = new Map<SessionId, AgentHandle>()
   private readonly listeners = new Set<SessionEventListener>()
   private readonly creations = new Set<Promise<SessionCreateResponse>>()
   private closing = false
 
-  constructor(ctx: Context, private readonly config: Config) {
+  constructor(ctx: Context) {
     super(ctx, 'apiProxy')
 
     const stopEvents = ctx.on('session/event', (session, event) => {
@@ -138,10 +125,7 @@ export class MinimalApiProxyService extends Service implements MinimalApiProxy {
     const handle = await this.ctx.agents.create({
       sessionId,
       meta: { cwd: request.cwd },
-      agentOptions: {
-        provider: this.config.provider,
-        model: this.config.model,
-      },
+      agentOptions: this.ctx.agentDefaultModel.currentSelection(),
     })
     if (this.closing) {
       await handle.dispose()

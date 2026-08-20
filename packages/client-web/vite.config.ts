@@ -7,7 +7,9 @@ const file = (relative: string): string => fileURLToPath(new URL(relative, impor
 export default defineConfig({
   plugins: [react()],
   build: {
-    sourcemap: true,
+    outDir: '../../web',
+    emptyOutDir: true,
+    sourcemap: false,
     rollupOptions: {
       input: {
         app: file('./index.html'),

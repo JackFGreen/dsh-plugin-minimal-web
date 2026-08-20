@@ -8,7 +8,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import type {} from '@minimal-web/host-webserver'
 import { readFile } from 'node:fs/promises'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { basename, dirname, extname, relative, resolve, sep } from 'node:path'
+import { dirname, extname, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 /** Stable Cordis plugin name. */
@@ -92,10 +92,7 @@ function isFileMissing(error: unknown): boolean {
 
 function defaultDistRoot(): string {
   const moduleDirectory = dirname(fileURLToPath(import.meta.url))
-  const packageDirectory = basename(moduleDirectory) === 'src'
-    ? dirname(moduleDirectory)
-    : dirname(dirname(moduleDirectory))
-  return resolve(packageDirectory, '../client-web/dist')
+  return resolve(moduleDirectory, '../web')
 }
 
 export default Object.assign(apply, { inject })

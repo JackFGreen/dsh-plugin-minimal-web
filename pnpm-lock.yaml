@@ -8,33 +8,12 @@ importers:
 
   .:
     dependencies:
-      '@minimal-web/client-connection':
-        specifier: workspace:*
-        version: link:packages/client-connection
-      '@minimal-web/client-modules':
-        specifier: workspace:*
-        version: link:packages/client-modules
-      '@minimal-web/client-runtime':
-        specifier: workspace:*
-        version: link:packages/client-runtime
-      '@minimal-web/client-ui-minimal-chat':
-        specifier: workspace:*
-        version: link:packages/client-ui-minimal-chat
-      '@minimal-web/client-ui-slots':
-        specifier: workspace:*
-        version: link:packages/client-ui-slots
-      '@minimal-web/client-web':
-        specifier: workspace:*
-        version: link:packages/client-web
-      '@minimal-web/host-apiproxy':
-        specifier: workspace:*
-        version: link:packages/host-apiproxy
-      '@minimal-web/host-frontend-static-minimal':
-        specifier: workspace:*
-        version: link:packages/host-frontend-static-minimal
-      '@minimal-web/host-webserver':
-        specifier: workspace:*
-        version: link:packages/host-webserver
+      ws:
+        specifier: ^8.21.0
+        version: 8.21.3
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@types/node':
         specifier: ^22.20.0
@@ -187,15 +166,15 @@ importers:
       '@deepseek-ai/dsh-agent':
         specifier: link:../../../deepseek-harness/packages/core/agent
         version: link:../../../deepseek-harness/packages/core/agent
+      '@deepseek-ai/dsh-agent-default-model':
+        specifier: link:../../../deepseek-harness/packages/core/agent-default-model
+        version: link:../../../deepseek-harness/packages/core/agent-default-model
       '@deepseek-ai/dsh-llm':
         specifier: link:../../../deepseek-harness/packages/llm/llm
         version: link:../../../deepseek-harness/packages/llm/llm
       '@deepseek-ai/dsh-session':
         specifier: link:../../../deepseek-harness/packages/core/session
         version: link:../../../deepseek-harness/packages/core/session
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../deepseek-harness/vendor/schemastery
-        version: link:../../../deepseek-harness/vendor/schemastery
 
   packages/host-frontend-static-minimal:
     devDependencies:

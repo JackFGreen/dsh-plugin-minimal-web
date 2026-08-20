@@ -1,53 +1,30 @@
 {
   "name": "dsh-plugin-minimal-web",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "exports": {
     "./host-apiproxy": {
-      "types": "./packages/host-apiproxy/lib/types/index.d.ts",
-      "default": "./packages/host-apiproxy/lib/types/index.js"
+      "default": "./lib/host-apiproxy.js"
     },
     "./host-webserver": {
-      "types": "./packages/host-webserver/lib/types/index.d.ts",
-      "default": "./packages/host-webserver/lib/types/index.js"
+      "default": "./lib/host-webserver.js"
     },
     "./client-connection": {
-      "types": "./packages/client-connection/lib/types/index.d.ts",
-      "default": "./packages/client-connection/lib/types/index.js"
-    },
-    "./client-runtime": {
-      "types": "./packages/client-runtime/lib/types/index.d.ts",
-      "default": "./packages/client-runtime/lib/types/index.js"
-    },
-    "./client-ui-slots": {
-      "types": "./packages/client-ui-slots/lib/types/index.d.ts",
-      "default": "./packages/client-ui-slots/lib/types/index.js"
-    },
-    "./client-ui-minimal-chat": {
-      "types": "./packages/client-ui-minimal-chat/lib/types/index.d.ts",
-      "default": "./packages/client-ui-minimal-chat/lib/types/index.js"
+      "default": "./lib/client-connection.js"
     },
     "./client-modules": {
-      "types": "./packages/client-modules/lib/types/index.d.ts",
-      "default": "./packages/client-modules/lib/types/index.js"
-    },
-    "./client-web": {
-      "types": "./packages/client-web/lib/types/index.d.ts",
-      "default": "./packages/client-web/lib/types/index.js"
+      "default": "./lib/client-modules.js"
     },
     "./host-frontend-static-minimal": {
-      "types": "./packages/host-frontend-static-minimal/lib/types/index.d.ts",
-      "default": "./packages/host-frontend-static-minimal/lib/types/index.js"
+      "default": "./lib/host-frontend-static-minimal.js"
     },
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
   },
   "files": [
     "cordis.patch.yml",
-    "packages/client-web/dist/**/*",
-    "packages/*/lib/types/**/*.js",
-    "packages/*/lib/types/**/*.d.ts"
+    "lib/**/*",
+    "web/**/*"
   ],
   "dsh": {
     "bundle": {
@@ -59,20 +36,16 @@
     "node": "^22.19.0 || >=24.0.0"
   },
   "scripts": {
-    "build": "pnpm typecheck && pnpm --filter @minimal-web/client-web build:web",
+    "build": "pnpm typecheck && pnpm build:node && pnpm build:web",
+    "build:node": "vite build --config vite.node.config.ts",
+    "build:web": "pnpm --filter @minimal-web/client-web build:web",
+    "prepack": "pnpm test && pnpm build",
     "test": "vitest run",
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "@minimal-web/client-connection": "workspace:*",
-    "@minimal-web/client-modules": "workspace:*",
-    "@minimal-web/client-runtime": "workspace:*",
-    "@minimal-web/client-ui-minimal-chat": "workspace:*",
-    "@minimal-web/client-ui-slots": "workspace:*",
-    "@minimal-web/client-web": "workspace:*",
-    "@minimal-web/host-frontend-static-minimal": "workspace:*",
-    "@minimal-web/host-apiproxy": "workspace:*",
-    "@minimal-web/host-webserver": "workspace:*"
+    "ws": "^8.21.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^22.20.0",

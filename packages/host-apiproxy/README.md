@@ -12,7 +12,7 @@
 
 ## 服务
 
-该 Cordis 服务依赖 `agents` 和 `agentLoop`。`provider` 与 `model` 配置决定每个浏览器所创建 Agent 使用的模型路由。`createSession()` 创建并持有一个 `AgentHandle`，`prompt()` 通过 `Agent.followup()` 提交带身份来源的用户消息，`subscribe()` 只接收由本服务持有的 Session 所产生的持久化事件。
+该 Cordis 服务依赖 `agents`、`agentLoop` 和 `agentDefaultModel`。`createSession()` 通过 `agentDefaultModel.currentSelection()` 读取DSH当前的全局默认模型，然后创建并持有一个 `AgentHandle`；本服务不再维护独立的Provider或模型配置。`prompt()` 通过 `Agent.followup()` 提交带身份来源的用户消息，`subscribe()` 只接收由本服务持有的Session所产生的持久化事件。
 
 订阅者抛出的异常会被记录和隔离，不会阻止其他订阅者接收事件。卸载时，服务停止发送事件，等待正在创建的 Agent 完成，并在清理结束前等待所有已持有的 `AgentHandle.dispose()` 完成。
 

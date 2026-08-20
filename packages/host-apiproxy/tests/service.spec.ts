@@ -9,6 +9,7 @@ interface TestComposition {
   readonly ctx: Context
   readonly fiber: ReturnType<Context['plugin']>
   readonly create: ReturnType<typeof vi.fn<(options: CreateAgentOptions) => Promise<AgentHandle>>>
+  readonly currentSelection: ReturnType<typeof vi.fn<() => CreateAgentOptions['agentOptions']>>
   readonly followups: Map<SessionId, ReturnType<typeof vi.fn<(message: UserMessage) => void>>>
   readonly disposals: Map<SessionId, ReturnType<typeof vi.fn<() => Promise<void>>>>
 }
@@ -30,11 +31,16 @@ async function compose(
       dispose,
     }
   })
+  const currentSelection = vi.fn<() => CreateAgentOptions['agentOptions']>(() => ({
+    provider: 'mock',
+    model: 'mock-model',
+  }))
   ctx.provide('agents', { create } as never)
   ctx.provide('agentLoop', {} as never)
-  const fiber = ctx.plugin(MinimalApiProxyService, { provider: 'mock', model: 'mock-model' })
+  ctx.provide('agentDefaultModel', { currentSelection } as never)
+  const fiber = ctx.plugin(MinimalApiProxyService)
   await fiber
-  return { ctx, fiber, create, followups, disposals }
+  return { ctx, fiber, create, currentSelection, followups, disposals }
 }
 
 function emitSessionEvent(ctx: Context, sessionId: SessionId, event: SessionEvent): void {
@@ -42,7 +48,7 @@ function emitSessionEvent(ctx: Context, sessionId: SessionId, event: SessionEven
 }
 
 describe('MinimalApiProxyService', () => {
-  it('creates an Agent with the configured model and submits a user follow-up', async () => {
+  it('creates an Agent with the shared default model and submits a user follow-up', async () => {
     const test = await compose()
     const created = await test.ctx.apiProxy.createSession({ cwd: '/workspace' })
 
@@ -51,6 +57,7 @@ describe('MinimalApiProxyService', () => {
       meta: { cwd: '/workspace' },
       agentOptions: { provider: 'mock', model: 'mock-model' },
     })
+    expect(test.currentSelection).toHaveBeenCalledOnce()
     await expect(test.ctx.apiProxy.prompt({
       sessionId: created.sessionId,
       text: 'hello',

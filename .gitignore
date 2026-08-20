@@ -9,6 +9,8 @@ node_modules/
 # Generated build output
 lib/
 dist/
+web/
+release/
 *.tsbuildinfo
 
 # Test and tool caches
