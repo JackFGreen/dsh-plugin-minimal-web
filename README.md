@@ -48,3 +48,9 @@ pnpm dlx @deepseek-ai/dsh --profile minimal-web
 ```text
 minimal web: http://127.0.0.1:3080
 ```
+
+
+
+https://github.com/user-attachments/assets/1f78337a-3a3b-4518-9af7-f79952745bcf
+
+
