@@ -10,8 +10,7 @@ class TestSessions implements Sessions {
   private state: ChatState = {
     sessionId: 'session-1' as ChatState['sessionId'],
     status: 'ready',
-    userText: '',
-    assistantText: '',
+    timeline: [],
   }
 
   readonly start = vi.fn<Sessions['start']>().mockResolvedValue(undefined)
@@ -51,15 +50,19 @@ describe('ChatApp', () => {
       sessions.publish({
         sessionId: 'session-1' as ChatState['sessionId'],
         status: 'running',
-        userText: 'hello',
-        assistantText: 'hel',
+        timeline: [
+          { id: 'user:1', type: 'user', text: 'hello' },
+          { id: 'reasoning:1:1:0', type: 'reasoning', turn: 1, step: 1, text: 'thinking' },
+          { id: 'assistant:1:1:1', type: 'assistant', turn: 1, step: 1, text: 'hel' },
+        ],
       })
     })
     expect((input as HTMLTextAreaElement).disabled).toBe(true)
-    expect(screen.getByLabelText('模型回答').textContent).toBe('hel')
+    expect(screen.getByLabelText('思考 1.1').textContent).toBe('thinking')
+    expect(screen.getByLabelText('模型回答 1.1').textContent).toBe('hel')
   })
 
-  it('renders completed text and runtime errors', () => {
+  it('renders turns, steps, tool calls, results and runtime errors', () => {
     const sessions = new TestSessions()
     render(<ChatApp sessions={sessions} />)
 
@@ -67,13 +70,32 @@ describe('ChatApp', () => {
       sessions.publish({
         sessionId: 'session-1' as ChatState['sessionId'],
         status: 'error',
-        userText: 'hello',
-        assistantText: 'hello world',
-        error: 'request failed',
+        timeline: [
+          { id: 'turn:1', type: 'turn', turn: 1, status: 'completed', reason: 'error' },
+          { id: 'step:1:1', type: 'step', turn: 1, step: 1, status: 'completed' },
+          {
+            id: 'tool:1:call-1',
+            type: 'tool',
+            turn: 1,
+            step: 1,
+            callId: 'call-1',
+            name: 'echo',
+            arguments: '{"text":"hello"}',
+            status: 'completed',
+            result: 'echo: hello',
+          },
+          { id: 'assistant:1:2:0', type: 'assistant', turn: 1, step: 2, text: 'hello world' },
+        ],
+        error: 'AUTH: 401: Invalid API Key',
       })
     })
 
-    expect(screen.getByLabelText('模型回答').textContent).toBe('hello world')
-    expect(screen.getByRole('alert').textContent).toBe('request failed')
+    expect(screen.getByText('轮次 1 · 已结束（error）')).toBeDefined()
+    expect(screen.getByText('步骤 1.1 · 已完成')).toBeDefined()
+    expect(screen.getByText('工具：echo · 已完成')).toBeDefined()
+    expect(screen.getByLabelText('工具参数 echo').textContent).toBe('{"text":"hello"}')
+    expect(screen.getByLabelText('工具结果 echo').textContent).toBe('echo: hello')
+    expect(screen.getByLabelText('模型回答 1.2').textContent).toBe('hello world')
+    expect(screen.getByRole('alert').textContent).toBe('AUTH: 401: Invalid API Key')
   })
 })
